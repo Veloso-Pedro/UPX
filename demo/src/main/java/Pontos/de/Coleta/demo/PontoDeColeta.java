@@ -1,4 +1,4 @@
-package Pontos.de.Coleta.demo; // <-- Verifique se este é o nome do seu pacote
+package Pontos.de.Coleta.demo;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -7,29 +7,29 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
-@Entity
-@Table(name = "ponto_de_coleta") // 1. Diz ao Java o nome exato da tabela
+@Entity // MySQL
+@Table(name = "ponto_de_coleta")
 public class PontoDeColeta {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id_ponto_de_coleta") // 2. Mapeia o campo 'id' para a coluna 'id_ponto_de_coleta'
-    private Integer id; // Mudei para Integer para bater com 'int' do MySQL
+    @Column(name = "id_ponto_de_coleta")
+    private Integer id;
 
-    @Column(name = "nome_local") // 3. Mapeia 'nome' para 'nome_local'
+    @Column(name = "nome_local")
     private String nome;
 
-    @Column(name = "email") // 4. Mapeia 'email' (vamos renomear o campo)
+    @Column(name = "email")
     private String email;
 
-    @Column(name = "endereco") // 5. Mapeia 'endereco'
+    @Column(name = "endereco")
     private String endereco;
 
-    // Diga ao Hibernate qual é a definição EXATA da coluna no banco
+    
     @Column(name = "aceita")
-    private String aceita; // 6. Mapeia 'aceita'
+    private String aceita;
         
-    @Column(name = "observacoes") // 7. Mapeia 'observacoes'
+    @Column(name = "observacoes")
     private String observacoes;
 
     @Column(name = "latitude")
@@ -39,7 +39,6 @@ public class PontoDeColeta {
     private Double longitude;
 
     // --- Getters e Setters ---
-    // (Gerados para os campos acima)
 
     public Integer getId() {
         return id;
