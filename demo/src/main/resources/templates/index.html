@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Pontos de Coleta – Sorocaba</title>
+  <meta name="description" content="Encontre pontos de coleta de óleo de cozinha usado em Sorocaba e saiba como descartar corretamente." />
+  <link rel="stylesheet" th:href="@{/css/style.css}">
+
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+     integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+     crossorigin=""/>
+  
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+     integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+     crossorigin=""></script>
+  
+</head>
+
+<body>
+
+<header>
+  <div class="wrap nav" role="navigation" aria-label="Navegação principal">
+    <a class="brand" href="#top" aria-label="Página inicial">
+      <span class="logo" aria-hidden="true">♻️</span>
+      <span>Pontos de coleta</span>
+    </a>
+    <nav class="menu" aria-label="Seções">
+      <a href="#pontos">Pontos</a>
+      <a href="#mapa">Mapa</a>
+      <a href="#como-funciona">Como funciona</a>
+      <a href="#indicar">Indicar ponto</a>
+      <a href="#faq">FAQ</a>
+    </nav>
+  </div>
+</header>
+
+<main id="top">
+   <div class="wrap" style="padding-top: 1rem;">
+    
+    <div class="card" 
+         style="background-color: #d4edda; border-color: #c3e6cb; color: #155724;"
+         th:if="${mensagem_sucesso}" 
+         th:text="${mensagem_sucesso}">
+         </div>
+
+    <div class="card" 
+         style="background-color: #f8d7da; border-color: #f5c6cb; color: #721c24;"
+         th:if="${mensagem_erro}" 
+         th:text="${mensagem_erro}">
+         </div>
+  </div>
+  <section class="hero wrap">
+    <h1>Descarte seu óleo usado ou pilha corretamente em Sorocaba</h1>
+    <p>Veja pontos e iniciativas locais que recebem óleo de cozinha usado.</p>
+  </section>
+
+  <section id="mapa" class="wrap">
+    <h2 class="shead">Mapa</h2>
+    <p class="muted">O mapa está centrado na região central de Sorocaba e mostrará os pontos cadastrados.</p>
+    
+    <div id="map-container" style="height: 450px; width: 100%; border-radius: 8px;"></div>
+
+  </section>
+
+  <section id="pontos" class="wrap">
+    <h2 class="shead">Pontos e iniciativas</h2>
+
+    <div class="grid cols-3">
+      <!--Ex1-->
+      <article class="card">
+        <span class="chip">Programa</span>
+        <h3>Projeto Óleo do Bem (TV TEM)</h3>
+        <p class="meta">Sorocaba/SP — Pontos de troca de óleo usado por sabão ecológico (locais variam).</p>
+        <p class="muted">Confira pontos ativos no site do projeto ou perfis oficiais.</p>
+        <p><a href="https://oleodobem.com/projeto-oleo-do-bem-chega-a-sorocaba-confira-os-pontos-de-coleta/" target="_blank" rel="noopener">Ver anúncio do projeto</a></p>
+      </article>
+      <!--Ex2-->
+      <article class="card">
+        <span class="chip">Empresa</span>
+        <h3>H2O Sustentável – coleta de óleo</h3>
+        <p class="meta">Sorocaba/SP — logística reversa de óleo usado (coletas por agendamento).</p>
+        <p class="muted">Para residências, verifique disponibilidade e orientações.</p>
+        <p><a href="https://reciclagem.h2osustentavel.com.br/reciclagens/coleta-de-oleos/logistica-reversa/coleta-de-oleo-sorocaba" target="_blank" rel="noopener">Saiba mais</a></p>
+      </article>
+      <!--Ex3-->
+      <article class="card">
+        <span class="chip">Ecoponto</span>
+        <h3>Ecoponto Cajuru (Sorocaba)</h3>
+        <p class="meta">Rua Mário Monteiro de Carvalho, s/n — Cajuru, Sorocaba/SP</p>
+        <p class="muted">Horários: Seg–Sex 7h–17h; Sáb 7h–12h. <em>Verifique se aceita óleo de cozinha</em> antes de levar.</p>
+        <p><a href="https://mapa.abrecon.org.br/ecoponto/940/ecoponto-cajuru" target="_blank" rel="noopener">Fonte: Mapa Abrecon</a></p>
+      </article>
+    </div>
+
+  <details class="card" style="margin-top:1rem" open> <summary><strong>Lista de Endereços</strong></summary>
+  <div class="panel" style="margin-top:.75rem; padding:1rem; overflow:auto;">
+    <table aria-label="Tabela de pontos de coleta">
+      <thead>
+        <tr>
+          <th>Nome</th>
+          <th>Endereço</th>
+          <th>Aceita</th>
+          <th>Observações</th>
+          <th>Ver no Mapa</th>
+        </tr>
+      </thead>
+      
+      <tbody>
+        <tr th:each="ponto : ${listaDePontos}">
+          <td th:text="${ponto.nome}">Nome do Ponto</td>
+          <td th:text="${ponto.endereco}">Endereço completo</td>
+          <td th:text="${ponto.aceita}">Tipo de material</td>
+          <td th:text="${ponto.observacoes}">Obs...</td>
+          <td>
+            <a th:if="${ponto.latitude != null}" 
+               th:href="@{'https://www.google.com/maps/search/?api=1&query=' + ponto.latitude + ',' + ponto.longitude}" 
+               target="_blank" 
+               rel="noopener">
+              Abrir Mapa
+            </a>
+            <span th:if="${ponto.latitude == null}">-</span>
+          </td>
+        </tr>
+      </tbody>
+
+    </table>
+  </div>
+</details>
+  </section>
+
+  <section id="como-funciona" class="wrap">
+    <h2 class="shead">Como armazenar e descartar o óleo usado</h2>
+    <div class="panel card">
+      <ol class="steps">
+        <li>Espere o óleo esfriar após o uso. Nunca manipule quente.</li>
+        <li>transfira com funil para um recipiente limpo e seco. Ex(Garrafa PET)</li>
+        <li>Feche bem, identifique o recipiente e guarde em local seguro.</li>
+        <li>Leve a um <a href="#pontos">ponto de coleta</a> cadastrado.</li>
+      </ol>
+      <p class="hint">Cada litro de óleo pode contaminar até <strong>25 mil litros</strong> de água.</p>
+    </div>
+  </section>
+
+  <section id="indicar" class="wrap">
+    <h2 class="shead">Indicar novo ponto</h2>
+    <div class="panel card">
+      <form th:action="@{/indicar}" method="post">
+        <div class="row">
+          <div>
+            <label for="nome">Nome do local</label>
+            <input id="nome" name="nome" required placeholder="Ex.: Mercado Bom Preço">
+          </div>
+          <div>
+            <label for="contato">Contato</label>
+            <input id="contato" name="email" placeholder="e-mail">
+          </div>
+        </div>
+        <label for="endereco">Endereço completo</label>
+        <input id="endereco" name="endereco" required placeholder="Rua, número, bairro, cidade" />
+        <div class="row">
+          <div>
+            <label for="aceita">O que aceita</label>
+            <select id="aceita" name="aceita">
+              <option>Óleo de cozinha / gordura vegetal </option>
+              <option>pilhas</option>
+              <option>Ambos</option>
+            </select>
+          </div>
+        </div>
+        <label for="obs">Observações</label>
+        <textarea id="obs" name="observacoes" placeholder="Regras, limites de volume, benefícios ao doador..."></textarea>
+        <button class="submit" type="submit">Enviar indicação</button>
+      </form>
+    </div>
+  </section>
+
+  <section id="faq" class="wrap">
+    <h2 class="shead">Perguntas frequentes</h2>
+    <div class="grid cols-2">
+      <article class="card">
+        <h3>Posso jogar óleo na pia?</h3>
+        <p class="muted">Não. O óleo endurece nas tubulações, causa entupimentos e polui a água. Leve sempre a um ponto de coleta.</p>
+      </article>
+      <article class="card">
+        <h3>Que tipo de óleo é aceito?</h3>
+        <p class="muted">Geralmente, óleo vegetal usado em frituras (soja, milho, canola, girassol). Pontos podem ter regras específicas — verifique antes.</p>
+      </article>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <p>Contato: <a href="mailto:contato@coletadeoleo.org">contato@coletadeoleo.org</a></p>
+  </div>
+</footer>
+
+<script>
+  // --- map sempre inicia em sorocaba ---
+  const map = L.map('map-container').setView([-23.50167, -47.45806], 13);
+
+  // --- camada visual openStreet ---
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+  }).addTo(map);
+
+  // --- Busca os pontos de coleta na API --
+  fetch('/api/pontos')
+    .then(response => response.json())
+    .then(pontos => {
+      
+      console.log("Pontos carregados:", pontos);
+      
+      // --- adiciona um marcador
+      pontos.forEach(ponto => {
+        
+        if (ponto.latitude && ponto.longitude) {
+          L.marker([ponto.latitude, ponto.longitude])
+            .addTo(map)
+            .bindPopup(
+              `<b>${ponto.nome}</b><br>${ponto.endereco}`
+            ); // O 'bindPopup' cria o balão de clique
+        }
+      });
+    })
+    .catch(error => {
+      console.error("Erro ao carregar os pontos de coleta:", error);
+    });
+</script>
+</body>
+</html>
