@@ -19,15 +19,15 @@ public class PontoDeColeta {
     @Column(name = "nome_local")
     private String nome;
 
-    @Column(name = "email")
-    private String email;
+    @Column(name = "contato")
+    private String contato;
 
     @Column(name = "endereco")
     private String endereco;
 
     
-    @Column(name = "aceita")
-    private String aceita;
+    @Column(name = "tipo_coleta")
+    private String tipoColeta;
         
     @Column(name = "observacoes")
     private String observacoes;
@@ -56,12 +56,12 @@ public class PontoDeColeta {
         this.nome = nome;
     }
 
-    public String getEmail() {
-        return email;
+    public String getContato() {
+        return contato;
     }
 
-    public void setEmail(String email) {
-        this.email = email;
+    public void setContato(String contato) {
+        this.contato = contato;
     }
 
     public String getEndereco() {
@@ -72,12 +72,12 @@ public class PontoDeColeta {
         this.endereco = endereco;
     }
 
-    public String getAceita() {
-        return aceita;
-    }
+    public String getTipoColeta() {
+        return tipoColeta;
+    }   
 
-    public void setAceita(String aceita) {
-        this.aceita = aceita;
+    public void setTipoColeta(String tipoColeta) {
+        this.tipoColeta = tipoColeta;
     }
 
     public String getObservacoes() {

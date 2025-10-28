@@ -110,7 +110,7 @@
         <tr th:each="ponto : ${listaDePontos}">
           <td th:text="${ponto.nome}">Nome do Ponto</td>
           <td th:text="${ponto.endereco}">Endereço completo</td>
-          <td th:text="${ponto.aceita}">Tipo de material</td>
+          <td th:text="${ponto.tipoColeta}">Tipo de material</td>
           <td th:text="${ponto.observacoes}">Obs...</td>
           <td>
             <a th:if="${ponto.latitude != null}" 
@@ -141,7 +141,7 @@
       <p class="hint">Cada litro de óleo pode contaminar até <strong>25 mil litros</strong> de água.</p>
     </div>
   </section>
-
+                      <!--Formulario -->
   <section id="indicar" class="wrap">
     <h2 class="shead">Indicar novo ponto</h2>
     <div class="panel card">
@@ -153,7 +153,7 @@
           </div>
           <div>
             <label for="contato">Contato</label>
-            <input id="contato" name="email" placeholder="e-mail">
+            <input id="contato" name="contato" placeholder="e-mail">
           </div>
         </div>
         <label for="endereco">Endereço completo</label>
@@ -161,7 +161,7 @@
         <div class="row">
           <div>
             <label for="aceita">O que aceita</label>
-            <select id="aceita" name="aceita">
+            <select id="aceita" name="tipo_coleta">
               <option>Óleo de cozinha / gordura vegetal </option>
               <option>pilhas</option>
               <option>Ambos</option>
