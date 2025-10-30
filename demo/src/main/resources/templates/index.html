@@ -109,7 +109,14 @@
       <tbody>
         <tr th:each="ponto : ${listaDePontos}">
           <td th:text="${ponto.nome}">Nome do Ponto</td>
-          <td th:text="${ponto.endereco}">Endereço completo</td>
+          <td th:text="${ponto.enderecoCompleto.logradouro} + ', ' + 
+             ${ponto.enderecoCompleto.nImovel} + ' - ' + 
+             ${ponto.enderecoCompleto.bairro} + ', ' + 
+             ${ponto.enderecoCompleto.cidade} + ' - ' + 
+             ${ponto.enderecoCompleto.estado} + ', ' + 
+             ${ponto.enderecoCompleto.cep}">
+            Endereço completo
+          </td>
           <td th:text="${ponto.tipoColeta}">Tipo de material</td>
           <td th:text="${ponto.observacoes}">Obs...</td>
           <td>
@@ -153,15 +160,27 @@
           </div>
           <div>
             <label for="contato">Contato</label>
-            <input id="contato" name="contato" placeholder="e-mail">
+            <input id="contato" name="contato" placeholder="telefone">
           </div>
         </div>
-        <label for="endereco">Endereço completo</label>
-        <input id="endereco" name="endereco" required placeholder="Rua, número, bairro, cidade" />
+        <label for="endereco">Logradouro</label>
+        <input id="logradouro" name = "logradouro" required placeholder="logradouro">
+        <label for="endereco">Número do Imovel</label>
+        <input id="nImovel" name = "nImovel" required placeholder="Número do imovel">
+        <label for="endereco">Complemento</label>
+        <input id="complemento" name = "complemento" placeholder="complemento">
+        <label for="endereco">Bairro</label>
+        <input id="bairro" name = "bairro" required placeholder="bairro">
+        <label for="endereco">Cidade</label>
+        <input id="cidade" name = "cidade" required placeholder="cidade">
+        <label for="endereco">Estado</label>
+        <input id="estado" name = "estado" required placeholder="estado">
+        <label for="endereco">CEP</label>
+        <input id="cep" name = "cep" required placeholder="cep">
         <div class="row">
           <div>
             <label for="aceita">O que aceita</label>
-            <select id="aceita" name="tipo_coleta">
+            <select id="aceita" name="tipoColeta">
               <option>Óleo de cozinha / gordura vegetal </option>
               <option>pilhas</option>
               <option>Ambos</option>
@@ -195,7 +214,6 @@
     <p>Contato: <a href="mailto:contato@coletadeoleo.org">contato@coletadeoleo.org</a></p>
   </div>
 </footer>
-
 <script>
   // --- map sempre inicia em sorocaba ---
   const map = L.map('map-container').setView([-23.50167, -47.45806], 13);
@@ -215,13 +233,14 @@
       // --- adiciona um marcador
       pontos.forEach(ponto => {
         
-        if (ponto.latitude && ponto.longitude) {
-          L.marker([ponto.latitude, ponto.longitude])
-            .addTo(map)
-            .bindPopup(
-              `<b>${ponto.nome}</b><br>${ponto.endereco}`
-            ); // O 'bindPopup' cria o balão de clique
-        }
+        // Só adiciona se tiver lat/lon E um endereço completo
+        if (ponto.latitude && ponto.longitude && ponto.enderecoCompleto) {
+      const enderecoString = `${ponto.enderecoCompleto.logradouro}, ${ponto.enderecoCompleto.nImovel}`;
+      
+      L.marker([ponto.latitude, ponto.longitude])
+        .addTo(map)
+        .bindPopup(`<b>${ponto.nome}</b><br>${enderecoString}`); // Use a string correta
+    }
       });
     })
     .catch(error => {

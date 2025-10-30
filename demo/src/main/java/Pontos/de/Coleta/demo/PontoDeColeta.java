@@ -1,10 +1,13 @@
 package Pontos.de.Coleta.demo;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 
 @Entity // MySQL
@@ -22,10 +25,10 @@ public class PontoDeColeta {
     @Column(name = "contato")
     private String contato;
 
-    @Column(name = "endereco")
-    private String endereco;
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "id_endereco_Completo", referencedColumnName = "id_endereco_Completo")
+    private EnderecoCompleto enderecoCompleto;
 
-    
     @Column(name = "tipo_coleta")
     private String tipoColeta;
         
@@ -64,12 +67,12 @@ public class PontoDeColeta {
         this.contato = contato;
     }
 
-    public String getEndereco() {
-        return endereco;
+    public EnderecoCompleto getEnderecoCompleto() {
+        return enderecoCompleto;
     }
 
-    public void setEndereco(String endereco) {
-        this.endereco = endereco;
+    public void setEnderecoCompleto(EnderecoCompleto enderecoCompleto) {
+        this.enderecoCompleto = enderecoCompleto;
     }
 
     public String getTipoColeta() {
