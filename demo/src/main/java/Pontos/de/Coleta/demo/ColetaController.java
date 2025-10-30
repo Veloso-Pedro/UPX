@@ -55,7 +55,6 @@ public class ColetaController {
         try {
             // --- INÍCIO DA GEOCODIFICAÇÃO ---
             
-            // 3. JUNTAR OS CAMPOS DE ENDEREÇO EM UMA STRING DE BUSCA
             String enderecoParaBusca = String.join(" ", 
                 endereco.getLogradouro(),
                 endereco.getNImovel(),
@@ -64,9 +63,8 @@ public class ColetaController {
                 endereco.getEstado()
             );
 
-            // 4. CHAMAR A API (usando PositionStack)
             String baseUrl = "http://api.positionstack.com/v1/forward";
-            String apiKey = "b0cfa17e15717b787d1731d7b2cfa75d"; // <-- NÃO ESQUEÇA SUA CHAVE
+            String apiKey = "b0cfa17e15717b787d1731d7b2cfa75d";
 
             String url = UriComponentsBuilder.fromHttpUrl(baseUrl)
                     .queryParam("access_key", apiKey)
@@ -95,35 +93,17 @@ public class ColetaController {
                 double lat = firstResult.getDouble("latitude");
                 double lon = firstResult.getDouble("longitude");
 
-                // 5. ATUALIZAR O OBJETO 'ponto' COM AS COORDENADAS
                 ponto.setLatitude(lat);
                 ponto.setLongitude(lon);
                 
-                // ---- CORREÇÃO AQUI ----
-                // O método 'setEndereco' não existe mais.
-                // Em vez disso, anexamos o objeto EnderecoCompleto ao PontoDeColeta.
                 ponto.setEnderecoCompleto(endereco);
 
             } else {
                 throw new Exception("Endereço não localizado. Verifique se está correto.");
             }
             // --- FIM DA GEOCODIFICAÇÃO ---
-
-
-            // 6. SALVAR O OBJETO PAI
             
-            // ---- CORREÇÃO AQUI ----
-            // Graças ao "cascade = CascadeType.ALL" na sua entidade,
-            // nós só precisamos salvar o 'ponto'.
-            // O Spring/JPA salvará automaticamente o 'endereco' 
-            // e cuidará da chave estrangeira para você.
             pontoRepository.save(ponto);
-            
-            // As linhas antigas abaixo não são mais necessárias:
-            // PontoDeColeta pontoSalvo = pontoRepository.save(ponto);
-            // Integer novoPontoId = pontoSalvo.getId();
-            // EnderecoCompleto.setIdPontodeColeta(novoPontoId); // <-- Isto estava errado
-            // enderecoRepository.save(endereco);
             
             
             redirectAttributes.addFlashAttribute("mensagem_sucesso", "Ponto de coleta salvo com sucesso!");
